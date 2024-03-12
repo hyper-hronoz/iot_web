@@ -4,17 +4,22 @@ import MyChart from "./Chart";
 import WelcomePage from "./WelcomePage";
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
-
 function App() {
   const [selectedMenuItem, setSelectedMenuItem] = useState(null);
+
+   // Define a function to handle navigation
+  const handleNavigate = (path) => {
+    window.location.href = path;
+  };
 
   return (
     <Router>
       <div className="App">
-        <Header onMenuItemClick={setSelectedMenuItem} />
+        <Header onMenuItemClick={setSelectedMenuItem} navigate={handleNavigate} />
         <Routes>
           <Route path="/" element={<WelcomePage />} />
-          <Route path="/chart" element={<MyChart selectedMenuItem={selectedMenuItem} />} />
+          // <Route path="/chart" element={<MyChart selectedMenuItem={selectedMenuItem} />} />
+          <Route path="/" element={<MyChart selectedMenuItem={selectedMenuItem} />} />
         </Routes>
       </div>
     </Router>
