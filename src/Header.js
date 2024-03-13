@@ -11,6 +11,8 @@ import MenuIcon from "@mui/icons-material/MenuOutlined";
 
 import { useNavigate } from "react-router-dom";
 
+import Cookies from 'js-cookie';
+
 function Header({ onMenuItemClick }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
     const navigate = useNavigate();
@@ -26,6 +28,7 @@ function Header({ onMenuItemClick }) {
   const handleMenuItemClick = (item) => {
     onMenuItemClick(item); // Update selectedMenuItem in parent component
     handleMenuClose();
+    Cookies.set('selectedMenuItem', item);
     navigate('/chart');
   };
 

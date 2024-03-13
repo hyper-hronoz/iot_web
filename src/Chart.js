@@ -2,12 +2,40 @@ import React, { useState, useEffect, useRef } from 'react';
 import Chart from 'chart.js/auto';
 import { Grid } from "@mui/material";
 
+import Cookies from 'js-cookie';
+
+function extractData(obj, target) {
+  const data = [];
+
+  function extract(obj) {
+    for (let key in obj) {
+      if (typeof obj[key] === 'object') {
+        // If the value is an object, recursively call extract
+        extract(obj[key]);
+      } else if (key === target) {
+        // If the key is 'temperature', push the value to temperatures array
+        data.push(obj[key]);
+      }
+    }
+  }
+
+  extract(obj);
+
+  return data;
+}
+
 function MyChart(props) {
   const { selectedMenuItem } = props;
 
   const [data, setData] = useState([]);
   const chartRef = useRef(null);
 
+  useEffect(() => {
+    const storedSelectedMenuItem = Cookies.get('selectedMenuItem');
+    if (storedSelectedMenuItem) {
+      props.setSelectedMenuItem(storedSelectedMenuItem);
+    }
+  }, []);
 
   useEffect(() => {
     const socket = new WebSocket('ws://localhost:8080');
@@ -18,7 +46,13 @@ function MyChart(props) {
 
     socket.onmessage = event => {
       const newData = JSON.parse(event.data);
-      setData(newData);
+
+      const storedSelectedMenuItem = Cookies.get('selectedMenuItem');
+      const data = extractData(newData, storedSelectedMenuItem.toLowerCase())
+
+      console.log(data)
+
+      setData(data);
     };
 
     return () => {

@@ -14,7 +14,7 @@ function App() {
         <Header onMenuItemClick={setSelectedMenuItem} />
         <Routes>
           <Route path="/" element={<WelcomePage />} />
-          <Route path="/chart" element={<MyChart selectedMenuItem={selectedMenuItem} />} />
+          <Route path="/chart" element={<MyChart selectedMenuItem={selectedMenuItem} setSelectedMenuItem={setSelectedMenuItem} />} />
         </Routes>
       </div>
     </Router>
