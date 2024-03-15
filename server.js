@@ -2,10 +2,47 @@
 
 const WebSocket = require('ws');
 
+const fs = require('fs'); // For Node.js environment
+
+const express = require("express")
+
+const app = express();
+
+app.get("/all", (req, res) => {
+    let jsonData = fs.readFileSync('data.json');
+    data = JSON.parse(jsonData);
+    res.send(data);
+})
+
+function appendDataToJson(newData) {
+    let data = [];
+    
+    // Check if the JSON file exists
+    if (fs.existsSync('data.json')) {
+        // Read existing JSON data
+        let jsonData = fs.readFileSync('data.json');
+        
+        // Parse JSON data into a JavaScript object
+        data = JSON.parse(jsonData);
+    }
+
+    // Append new data to the JavaScript object
+    data.push(newData);
+
+    // Convert the JavaScript object back to JSON
+    let updatedJsonData = JSON.stringify(data, null, 2);
+
+    // Write the updated JSON data to the file
+    fs.writeFileSync('data.json', updatedJsonData);
+
+    console.log('Data appended to JSON file.');
+}
+
+
+
 const wss = new WebSocket.Server({ port: 8080 });
 
 let circularArray = new Array(20).fill(null);
-
 
 // Function to send data to connected clients
 const sendDataToClients = () => {
@@ -39,7 +76,7 @@ wss.on('connection', ws => {
 const mqtt = require('mqtt');
 
 // MQTT broker address and port
-const MQTT_BROKER = '192.168.3.4';
+const MQTT_BROKER = '192.168.244.82';
 const MQTT_PORT = 1883;
 
 const MQTT_TOPIC = 'test';
@@ -61,6 +98,9 @@ function appendAndUpdate(newValue) {
 client.on('message', function(topic, message) {
     try {
         let data = JSON.parse(message.toString())
+        let new_data = data;
+        new_data["time"] = new Date().getTime() 
+        appendDataToJson(new_data);
         appendAndUpdate(data);
         
         console.log(`Received message: ${message.toString()}`);

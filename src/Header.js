@@ -6,16 +6,15 @@ import {
   IconButton,
   Menu,
   MenuItem,
+  Button, // Import Button component
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/MenuOutlined";
-
 import { useNavigate } from "react-router-dom";
-
 import Cookies from 'js-cookie';
 
 function Header({ onMenuItemClick }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-    const navigate = useNavigate();
+  const navigate = useNavigate();
 
   const handleMenuOpen = () => {
     setIsMenuOpen(true);
@@ -26,11 +25,24 @@ function Header({ onMenuItemClick }) {
   };
 
   const handleMenuItemClick = (item) => {
-    onMenuItemClick(item); // Update selectedMenuItem in parent component
+    onMenuItemClick(item);
     handleMenuClose();
     Cookies.set('selectedMenuItem', item);
     navigate('/chart');
   };
+
+  const handleAuthorization = () => {
+    if (Cookies.get("username")) {
+      Cookies.remove("username");
+      navigate('/'); // Redirect to login page
+    } else {
+      navigate('/auth/login'); // Redirect to login page
+    }
+  };
+
+  const handelLogoClick = () => {
+    navigate('/'); // Redirect to login page
+  }
 
   return (
     <AppBar position="static">
@@ -70,9 +82,18 @@ function Header({ onMenuItemClick }) {
           <MenuItem onClick={() => handleMenuItemClick("Coming soon...")}>Coming soon...</MenuItem>
         </Menu>
 
-        <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+
+        <Typography variant="h6" component="div" sx={{ flexGrow: 1 }} onClick={handelLogoClick} style={{cursor: "pointer"}}>
           IoT Project
         </Typography>
+
+        <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+          Welcome to your dashboard {Cookies.get("username")}
+        </Typography>
+        {/* Authorization Button */}
+        <Button color="inherit" onClick={handleAuthorization}>
+          {Cookies.get("username") ? "Logout" : "Login"}
+        </Button>
       </Toolbar>
     </AppBar>
   );
