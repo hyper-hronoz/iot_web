@@ -7,7 +7,7 @@ import Cookies from 'js-cookie';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 function LoginForm() {
-  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
   const navigate = useNavigate();
@@ -16,10 +16,10 @@ function LoginForm() {
 
   const requestOptions = {
     method: 'POST',
-    body: formData
+    body: formData,
   };
 
-  const apiUrl = 'http://localhost:8000/auth.php';
+  const apiUrl = 'http://localhost:8000/login.php';
 
   const onRegisterSelected =() => {
     navigate("/auth/signup");
@@ -28,10 +28,10 @@ function LoginForm() {
   const handleSubmit = (event) => {
     event.preventDefault();
     // Perform authentication logic here
-    console.log('Username:', username);
+    console.log('Email:', email);
     console.log('Password:', password);
 
-    formData.append('username', username);
+    formData.append('email', email);
     formData.append('password', password);
     formData.append('action', 'login'); // Action for login
 
@@ -40,8 +40,8 @@ function LoginForm() {
     .then(data => {
         // Handle the response data
         console.log(data);
-        // Example: If authentication is successful, redirect to another page
         if (data.success) {
+          Cookies.set("email", data["email"]);
           Cookies.set("username", data["username"]);
           navigate("/");          
         } else {
@@ -53,7 +53,7 @@ function LoginForm() {
     });
 
     // Reset form fields
-    setUsername('');
+    setEmail('');
     setPassword('');
   };
 
@@ -68,14 +68,14 @@ function LoginForm() {
             <div className="card-body">
               <form onSubmit={handleSubmit} className="d-flex flex-column gap-3">
                 <div className="form-group">
-                  <label htmlFor="username">Username</label>
+                  <label htmlFor="email">Email</label>
                   <input
-                    type="text"
+                    type="email"
                     className="form-control"
-                    id="username"
-                    placeholder="Enter username"
-                    value={username}
-                    onChange={(e) => setUsername(e.target.value)}
+                    id="email"
+                    placeholder="Enter email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
                   />
                 </div>
                 <div className="form-group">
@@ -89,7 +89,6 @@ function LoginForm() {
                     onChange={(e) => setPassword(e.target.value)}
                   />
                 </div>
-                <span onClick={onRegisterSelected} className="text-primary text-decoration-underline" style={{cursor: "pointer"}}>Or register instead</span>
                 <button type="submit" className="btn btn-primary btn-block p-2">Login</button>
               </form>
             </div>

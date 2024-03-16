@@ -1,3 +1,7 @@
-{
-    "Dimaf": "hello"
-}
+[
+    {
+        "email": "vlad_moryakov_prog@mail.ru",
+        "username": "vladik",
+        "password": "fuckme"
+    }
+]

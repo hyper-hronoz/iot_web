@@ -34,6 +34,7 @@ function Header({ onMenuItemClick }) {
   const handleAuthorization = () => {
     if (Cookies.get("username")) {
       Cookies.remove("username");
+      Cookies.remove("email");
       navigate('/'); // Redirect to login page
     } else {
       navigate('/auth/login'); // Redirect to login page

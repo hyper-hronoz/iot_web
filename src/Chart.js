@@ -4,7 +4,10 @@ import { Grid } from "@mui/material";
 
 import Cookies from 'js-cookie';
 
+import { useNavigate } from "react-router-dom";
+
 function extractData(obj, target) {
+
   const data = [];
 
   function extract(obj) {
@@ -30,6 +33,8 @@ function MyChart(props) {
   const [data, setData] = useState([]);
   const chartRef = useRef(null);
 
+  const navigate = useNavigate();
+
   useEffect(() => {
     const storedSelectedMenuItem = Cookies.get('selectedMenuItem');
     if (storedSelectedMenuItem) {
@@ -38,6 +43,9 @@ function MyChart(props) {
   }, []);
 
   useEffect(() => {
+    if (!(Cookies.get("email") && Cookies.get("username"))) {
+      navigate("/auth/login");
+    }
     const socket = new WebSocket('ws://localhost:8080');
 
     socket.onopen = () => {
