@@ -15,12 +15,12 @@ if (!isset($_SESSION["authenticated"]) || $_SESSION["authenticated"] !== true) {
 }
 
 if (isset($_POST["logout"])) {
-    $_SESSION = array();
+  $_SESSION = array();
 
-    session_destroy();
+  session_destroy();
 
-    header("Location: admin_login.php");
-    exit;
+  header("Location: admin_login.php");
+  exit;
 }
 
 function read_users_data()
@@ -45,7 +45,7 @@ function write_users_data($users_data)
 function handle()
 {
   if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    echo "Action: " . $_POST["action"] ;
+    // echo "Action: " . $_POST["action"];
     if (isset($_POST["action"]) && $_POST["action"] === "register") {
       $email = $_POST["email"];
       $username = $_POST["username"];
@@ -53,10 +53,10 @@ function handle()
 
       // Your logic for storing the user in the database goes here
       // For demonstration purposes, let's just echo the received data
-      echo "User registered successfully!<br>";
-      echo "Email: " . $email . "<br>";
-      echo "Username: " . $username . "<br>";
-      echo "Password: " . $password . "<br>";
+      // echo "User registered successfully!<br>";
+      // echo "Email: " . $email . "<br>";
+      // echo "Username: " . $username . "<br>";
+      // echo "Password: " . $password . "<br>";
 
       if (isset($_POST["email"]) && isset($_POST["username"]) && isset($_POST["password"])) {
         $email = $_POST["email"];
@@ -75,7 +75,7 @@ function handle()
         }
 
         if ($email_exists) {
-          echo json_encode(array("success" => false, "message" => "Email already exists"));
+          // echo json_encode(array("success" => false, "message" => "Email already exists"));
           return;
         }
 
@@ -86,7 +86,7 @@ function handle()
 
         $_SESSION["email"] = $email;
         $_SESSION["username"] = $username;
-        echo json_encode(array("success" => true, "message" => "Registration successful", "username" => $username, "email" => $email));
+        // echo json_encode(array("success" => true, "message" => "Registration successful", "username" => $username, "email" => $email));
       }
     } elseif (isset($_POST["action"]) && isset($_POST["user_index"])) {
 
@@ -148,22 +148,22 @@ $users = json_decode($users_json, true);
 
 <body>
 
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
-  <a class="navbar-brand" href="#">Admin Panel</a>
-  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-    <span class="navbar-toggler-icon"></span>
-  </button>
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" href="#">Admin Panel</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
 
-  <div class="collapse navbar-collapse" id="navbarSupportedContent">
-    <ul class="navbar-nav ml-auto">
-      <li class="nav-item active">
-        <form method="post" class="form-inline">
-          <button class="btn btn-outline-danger my-2 my-sm-0" type="submit" name="logout">Logout</button>
-        </form>
-      </li>
-    </ul>
-  </div>
-</nav>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto">
+        <li class="nav-item active">
+          <form method="post" class="form-inline">
+            <button class="btn btn-outline-danger my-2 my-sm-0" type="submit" name="logout">Logout</button>
+          </form>
+        </li>
+      </ul>
+    </div>
+  </nav>
 
   <div class="container mb-5">
     <div class="row justify-content-center">
@@ -197,41 +197,49 @@ $users = json_decode($users_json, true);
 
   <div class="container mt-4">
     <h2 class="mb-3">Registered Users</h2>
-    <div class="row">
-      <?php foreach ($users as $index => $user) : ?>
-        <div class="col-md-6">
-          <div class="card mb-3">
-            <div class="card-body">
-              <h5 class="card-title">User Details</h5>
-              <form method="post">
-                <input type="hidden" name="action" value="update">
-                <input type="hidden" name="user_index" value="<?php echo $index; ?>">
+    <table class="row table table-striped" style="vertical-align: bottom;">
+      <tbody style="display:table; width:100%;">
+        <?php foreach ($users as $index => $user) : ?>
+          <tr class="w-100" style="display:table; width:100%;">
+            <th scope="row" style="vertical-align: middle;"><?php echo $index ?></th>
+            <form method="post">
+              <input type="hidden" name="action" value="update">
+              <input type="hidden" name="user_index" value="<?php echo $index; ?>">
+              <td>
                 <div class="form-group">
                   <label for="email<?php echo $index; ?>">Email</label>
                   <input type="text" class="form-control" id="email<?php echo $index; ?>" name="email" value="<?php echo $user['email']; ?>" required>
                 </div>
+              </td>
+              <td>
                 <div class="form-group">
                   <label for="username<?php echo $index; ?>">Username</label>
                   <input type="text" class="form-control" id="username<?php echo $index; ?>" name="username" value="<?php echo $user['username']; ?>" required>
                 </div>
+              </td>
+              <td>
                 <div class="form-group">
                   <label for="password<?php echo $index; ?>">Password</label>
                   <input type="password" class="form-control" id="password<?php echo $index; ?>" name="password" value="<?php echo $user['password']; ?>" required>
                 </div>
+              <td style="vertical-align: middle;">
                 <button type="submit" class="btn btn-primary">Update</button>
-              </form>
-              <form>
-                <input type="hidden" name="action" value="delete">
-                <input type="hidden" name="user_index" value="<?php echo $index; ?>">
+              </td>
+            </form>
+            </td>
+            <form>
+              <input type="hidden" name="action" value="delete">
+              <input type="hidden" name="user_index" value="<?php echo $index; ?>">
+              <td  style="vertical-align: middle;">
                 <button type="submit" class="btn btn-danger" formaction="<?php echo $_SERVER['PHP_SELF']; ?>" formmethod="post">
                   Delete
                 </button>
-              </form>
-            </div>
-          </div>
-        </div>
-      <?php endforeach; ?>
-    </div>
+              </td>
+            </form>
+          </tr>
+        <?php endforeach; ?>
+      </tbody>
+    </table>
   </div>
 
 

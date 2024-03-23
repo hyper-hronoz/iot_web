@@ -46,6 +46,7 @@ let circularArray = new Array(20).fill(null);
 
 // Function to send data to connected clients
 const sendDataToClients = () => {
+  console.log("Sending data")
   wss.clients.forEach(client => {
     if (client.readyState === WebSocket.OPEN) {
       console.log(circularArray)
@@ -76,7 +77,7 @@ wss.on('connection', ws => {
 const mqtt = require('mqtt');
 
 // MQTT broker address and port
-const MQTT_BROKER = '192.168.244.82';
+const MQTT_BROKER = '192.168.3.4';
 const MQTT_PORT = 1883;
 
 const MQTT_TOPIC = 'test';
@@ -100,7 +101,7 @@ client.on('message', function(topic, message) {
         let data = JSON.parse(message.toString())
         let new_data = data;
         new_data["time"] = new Date().getTime() 
-        appendDataToJson(new_data);
+        // appendDataToJson(new_data);
         appendAndUpdate(data);
         
         console.log(`Received message: ${message.toString()}`);

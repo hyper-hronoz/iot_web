@@ -46,13 +46,14 @@ function MyChart(props) {
     if (!(Cookies.get("email") && Cookies.get("username"))) {
       navigate("/auth/login");
     }
-    const socket = new WebSocket('ws://localhost:8080');
+    const socket = new WebSocket('ws://localhost:5000');
 
     socket.onopen = () => {
       console.log('Connected to websocket server');
     };
 
     socket.onmessage = event => {
+      console.log(event.data)
       const newData = JSON.parse(event.data);
 
       const storedSelectedMenuItem = Cookies.get('selectedMenuItem');
