@@ -91,7 +91,11 @@ function Header({ onMenuItemClick }) {
         <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
           Welcome to your dashboard {Cookies.get("username")}
         </Typography>
-        {/* Authorization Button */}
+        <a color="inherit" href="http://localhost:8000/admin_login.php" style={{color: "#fff", textDecoration: "none"}} rel="noreferrer" target="_blank">
+          <Button color="inherit">
+            Admin Panel
+          </Button>
+        </a>
         <Button color="inherit" onClick={handleAuthorization}>
           {Cookies.get("username") ? "Logout" : "Login"}
         </Button>

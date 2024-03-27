@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{{ title }}</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet" />
+    <style>
+        /* Additional custom styles can be added here */
+    </style>
+</head>
+
+<body>
+    <div class="container mt-5">
+        <h1 class="display-4">{{ message }}</h1>
+        <p class="lead">
+            This is a simple Flask application using Bootstrap for styling and Jinja
+            for templating.
+        </p>
+
+        <a href="/download_csv" target="_blank" class="btn btn-primary">Export as CSV</a>
+
+        <div class="table-responsive mt-4">
+            <table class="table table-striped table-bordered">
+                <thead class="thead-dark">
+                    <tr>
+                        <th scope="col">Temperature</th>
+                        <th scope="col">Humidity</th>
+                        <th scope="col">Date</th>
+                    </tr>
+                </thead>
+                <tbody id="table">
+                    {% for entry in data %}
+                    <tr>
+                        <td>{{ entry['temperature'] }}</td>
+                        <td>{{ entry['humidity'] }}</td>
+                        <td>{{ entry['time'] }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+
+        const updateData = async () => {
+            let url = "http://localhost:5000/update_table";
+            let response = await fetch(url);
+            let data = await response.json();
+
+            table.innerText = "";
+
+            let elementsToUppend = ""
+
+            console.log(data)
+
+            data.forEach(item => {
+                elementsToUppend += `
+                    <tr>
+                        <td>${item["temperature"]}</td>
+                        <td>${item["humidity"]}</td>
+                        <td>${item["time"]}</td>
+                    </tr>
+                `
+                console.log(item["humidity"])
+                console.log(item["temperature"])
+                console.log(item["time"])
+            })
+
+            table.innerHTML = elementsToUppend;
+        }
+
+        const table = document.querySelector("#table");
+
+        console.log(table);
+        
+        setInterval(updateData, 5000)
+
+    </script>
+</body>
+
+</html>
+

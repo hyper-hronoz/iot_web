@@ -10,7 +10,7 @@ MQTT_BROKER = '192.168.3.4'
 MQTT_PORT = 1883
 MQTT_TOPIC = 'test'
 
-app = Flask(__name__)
+app = Flask(__name__, template_folder='views')
 
 # Function to append data to JSON file
 def append_data_to_json(new_data):
@@ -62,10 +62,11 @@ circular_array = []
 # Route for serving the webpage
 @app.route('/')
 def index():
-    return render_template('index.html')
+    return render_template('index.html', title='Home', message='Hello, Flask!')
 
 # Main function
 if __name__ == "__main__":
+    # app.run()
     mqtt_client = mqtt_setup()
     socketio.run(app)
 
